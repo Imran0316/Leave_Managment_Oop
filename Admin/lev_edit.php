@@ -1,3 +1,14 @@
+<?php
+$conn=mysqli_connect("localhost","root","","leavesys");
+$id=$_GET["id"];
+$sql="SELECT * FROM leavestype WHERE id = '{$id}'";
+$run=mysqli_query($conn,$sql);
+$data=mysqli_fetch_assoc($run);
+
+
+
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -167,11 +178,10 @@
         justify-content: center;
         flex-direction: column;
     }
-    .cards{
-      margin-bottom: 5px;
-    }
 
-    
+    .cards {
+        margin-bottom: 5px;
+    }
     </style>
 </head>
 
@@ -197,89 +207,30 @@
             include("../include/sidebar.php");
             ?>
 
-            <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group mr-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <span data-feather="calendar"></span>
-                            This week
-                        </button>
-                    </div>
-                </div>
+            <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 d-flex align-items-start flex-column">
+                <h3 class="text-center mt-4  d-inline-block">Edit Leave Types</h3>
 
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-4 mb-3 mb-sm-0  cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Registered employee</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4  cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Listed Dpartments</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Listed Leave Type</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
+
+
+
+                <div class=" border border-1 w-50 p-3 mt-3">
+                    <form action="lev_update.php" method="post">
+                        <input type="hidden" name="id" value="<?php echo $data["id"] ?>" class="form-control " id="">
+                        <br>
+                        <label class="form-label">Leave Type</label>
+                        <input type="text" name="lev_type" value="<?php echo $data["lev_type"] ?>" class="form-control "
+                            id=""> <br>
+                        <label class="form-label">Discription</label>
+                        <input type="text" name="lev_desc" value="<?php echo $data["discription"] ?>"
+                            class="form-control" id=""> <br>
                         
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 cards mb-3 mb-sm-0">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Approved Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">New Leaves Application</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                  
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+                        <input type="submit" value="update" name="lev_update" class="btn-primary btn">
+                    </form>
                 </div>
 
-                <div class="container-fluid w-100 border border-1">
-                  <h5>Latest Leaves Applications</h5>
-                </div>
+
+
 
 
             </main>

@@ -1,3 +1,11 @@
+<?php
+$conn=mysqli_connect("localhost","root","","leavesys");
+$sql="SELECT * FROM department";
+$run=mysqli_query($conn,$sql);
+if(mysqli_num_rows($run) > 0){
+
+
+?>
 <!doctype html>
 <html lang="en">
 
@@ -167,11 +175,15 @@
         justify-content: center;
         flex-direction: column;
     }
-    .cards{
-      margin-bottom: 5px;
+
+    .cards {
+        margin-bottom: 5px;
     }
 
-    
+    thead td {
+        color: blue;
+        font-weight: bold;
+    }
     </style>
 </head>
 
@@ -197,89 +209,46 @@
             include("../include/sidebar.php");
             ?>
 
-            <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group mr-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <span data-feather="calendar"></span>
-                            This week
-                        </button>
-                    </div>
+
+            <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 d-flex align-items-start flex-column">
+                <h3 class="text-center mt-4  d-inline-block">Manage Departments</h3>
+
+                <div class="container-fluid py-5">
+                    <table class="table ">
+                        <thead>
+                            <tr>
+                                <td>Department Name</td>
+                                <td>Short Name</td>
+                                <td>Department Code</td>
+                                <td>Creation Time</td>
+                                <td>Edit</td>
+                                <td>Delete</td>
+                            </tr>
+                        </thead>
+                        <?php
+                        while($data=mysqli_fetch_assoc($run)){
+                    ?>
+                        <tbody>
+                            <tr>
+                                <td><?php echo $data["deptname"]; ?></td>
+                                <td><?php echo $data["deptsname"]; ?></td>
+                                <td><?php echo $data["deptcode"]; ?></td>
+                                <td><?php echo $data["time"]; ?></td>
+                                <td><a href="deptedit.php?id=<?php echo $data["id"]; ?>"><i
+                                            class="fa-solid fa-pencil text-success"></i></a></td>
+                                <td><a href="deptdelete.php?id=<?php echo $data["id"]; ?>"><i
+                                            class="fa-solid fa-trash-can text-danger "></i></a></td>
+
+                            </tr>
+                        </tbody>
+                        <?php }?>
+                    </table>
+                    <?php }?>
                 </div>
 
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-4 mb-3 mb-sm-0  cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Registered employee</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4  cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Listed Dpartments</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Listed Leave Type</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 cards mb-3 mb-sm-0">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Approved Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">New Leaves Application</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                  
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="container-fluid w-100 border border-1">
-                  <h5>Latest Leaves Applications</h5>
-                </div>
+
+
 
 
             </main>

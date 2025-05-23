@@ -1,3 +1,28 @@
+<?php
+session_start();
+   
+
+if(isset($_POST["lev_add"])){
+    $levtype=$_POST["lev_type"];
+    $levdesc=$_POST["lev_desc"];
+    
+    $conn=mysqli_connect("localhost","root","","leavesys");
+    $sql="INSERT INTO `leavestype`(`lev_type`, `discription`) VALUES ('$levtype','$levdesc')";
+    $run=mysqli_query($conn,$sql);
+     $success="";
+        if ($run) {
+        $_SESSION['success'] = "Leave Type added successfully!";
+        header("Location: lev_add.php");
+        exit();
+    } else {
+        $_SESSION['error'] = "Error adding Leave Type!";
+        header("Location:  lev_add.php");
+        exit();
+    }
+
+}
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -167,11 +192,29 @@
         justify-content: center;
         flex-direction: column;
     }
-    .cards{
-      margin-bottom: 5px;
-    }
 
-    
+    .cards {
+        margin-bottom: 5px;
+    }
+    body{
+        background-color: #f4f4f4 !important;
+    }
+    .f_c{
+        background-color: white !important;
+    }
+      input,
+    select {
+        border-radius: 0 !important;
+        border-bottom-color: gray !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-top: none !important;
+    }
+    input:focus{
+        outline: none !important;
+        box-shadow: none !important;
+        border-bottom-color: blue !important;
+    }
     </style>
 </head>
 
@@ -193,93 +236,42 @@
 
     <div class="container-fluid">
         <div class="row">
-            <?php
+           <?php
             include("../include/sidebar.php");
-            ?>
+           ?>
 
-            <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group mr-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <span data-feather="calendar"></span>
-                            This week
-                        </button>
-                    </div>
+            <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 d-flex align-items-start flex-column">
+                <h3 class="text-center mt-4  d-inline-block">Add Leave Type</h3>
+
+
+                <?php if (isset($_SESSION['success'])): ?>
+                <div class="alert alert-success border">
+                    <?= $_SESSION['success']; unset($_SESSION['success']); ?>
                 </div>
+                <?php endif; ?>
 
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-4 mb-3 mb-sm-0  cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Registered employee</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4  cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Listed Dpartments</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Listed Leave Type</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
+                <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger">
+                    <?= $_SESSION['error']; unset($_SESSION['error']); ?>
+                </div>
+                <?php endif; ?>
+
+
+
+                <div class="f_c w-50 p-3 mt-3">
+                    <form action="" method="post">
+                        <label class="form-label">Leave Type</label>
+                        <input type="text" name="lev_type" class="form-control " id=""> <br>
+                        <label class="form-label">Discription</label>
+                        <input type="text" name="lev_desc" class="form-control" id=""> <br>
                         
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 cards mb-3 mb-sm-0">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Approved Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">New Leaves Application</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                  
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+                        <input type="submit" value="Add" name="lev_add" class="btn-primary btn">
+                    </form>
                 </div>
 
-                <div class="container-fluid w-100 border border-1">
-                  <h5>Latest Leaves Applications</h5>
-                </div>
+
+
 
 
             </main>

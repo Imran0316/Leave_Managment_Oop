@@ -1,3 +1,29 @@
+<?php
+session_start();
+   
+
+if(isset($_POST["deptadd"])){
+    $deptname=$_POST["deptname"];
+    $deptsname=$_POST["deptsname"];
+    $deptcode=$_POST["deptcode"];
+    
+    $conn=mysqli_connect("localhost","root","","leavesys");
+    $sql="INSERT INTO `department`(`deptname`, `deptsname`, `deptcode`) VALUES ('$deptname','$deptsname','$deptcode')";
+    $run=mysqli_query($conn,$sql);
+     $success="";
+        if ($run) {
+        $_SESSION['success'] = "Department added successfully!";
+        header("Location: add_dept.php");
+        exit();
+    } else {
+        $_SESSION['error'] = "Error adding department!";
+        header("Location:  add_dept.php");
+        exit();
+    }
+
+}
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -167,11 +193,10 @@
         justify-content: center;
         flex-direction: column;
     }
-    .cards{
-      margin-bottom: 5px;
-    }
 
-    
+    .cards {
+        margin-bottom: 5px;
+    }
     </style>
 </head>
 
@@ -193,93 +218,43 @@
 
     <div class="container-fluid">
         <div class="row">
-            <?php
+           <?php
             include("../include/sidebar.php");
-            ?>
+           ?>
 
-            <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group mr-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <span data-feather="calendar"></span>
-                            This week
-                        </button>
-                    </div>
+            <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 d-flex align-items-start flex-column">
+                <h3 class="text-center mt-4  d-inline-block">Add Department</h3>
+
+
+                <?php if (isset($_SESSION['success'])): ?>
+                <div class="alert alert-success border">
+                    <?= $_SESSION['success']; unset($_SESSION['success']); ?>
+                </div>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger">
+                    <?= $_SESSION['error']; unset($_SESSION['error']); ?>
+                </div>
+                <?php endif; ?>
+
+
+
+                <div class=" border border-1 w-50 p-3 mt-3">
+                    <form action="" method="post">
+                        <label class="form-label">Department Name</label>
+                        <input type="text" name="deptname" class="form-control " id=""> <br>
+                        <label class="form-label">Department Short Name</label>
+                        <input type="text" name="deptsname" class="form-control" id=""> <br>
+                        <label class="form-label">Department Code</label>
+                        <input type="text" name="deptcode" class="form-control" id=""> <br>
+
+                        <input type="submit" value="Add" name="deptadd" class="btn-primary btn">
+                    </form>
                 </div>
 
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-4 mb-3 mb-sm-0  cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Registered employee</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4  cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Listed Dpartments</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Listed Leave Type</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 cards mb-3 mb-sm-0">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Approved Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">New Leaves Application</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                  
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="container-fluid w-100 border border-1">
-                  <h5>Latest Leaves Applications</h5>
-                </div>
+
 
 
             </main>

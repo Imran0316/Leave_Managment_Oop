@@ -193,9 +193,52 @@
 
     <div class="container-fluid">
         <div class="row">
-            <?php
-            include("../include/sidebar.php");
-            ?>
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="container-fluid admin text-center py-3 bg-secondary">
+                    <div class="user-img bg-light border rounded-circle ">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <p class="text-light">Employee</p>
+                </div>
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">
+                                <span data-feather="home"></span>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">My profile</a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">Change Passsword</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href="#" class="nav-link d-flex justify-content-between align-items-center"
+                                id="levToggle">
+                                <span><span data-feather="folder"></span> Leaves</span>
+                                <span id="levChevron" class="chevron">&#x25BC;</span>
+                            </a>
+                            <ul class="nav flex-column " id="levDropdown" style="display: none;">
+                                <li class="nav-item ">
+                                    <a href="#" class="nav-link text-secondary">- Apply Leaves</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link text-secondary">- Leaves History</a>
+                                </li>
+                            </ul>
+                        </li>
+                       
+
+                        </li>
+
+
+
+                </div>
+            </nav>
 
             <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
                 <div
@@ -218,7 +261,7 @@
                         <div class="col-sm-4 mb-3 mb-sm-0  cards">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Total Registered employee</h5>
+                                    <h5 class="card-title">Total Leaves</h5>
                                     <p class="card-text">With supporting text below as a natural lead-in to additional
                                         content.</p>
                                 </div>
@@ -227,40 +270,9 @@
                         <div class="col-sm-4  cards">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Listed Dpartments</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Listed Leave Type</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 cards mb-3 mb-sm-0">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
                                     <h5 class="card-title">Approved Leaves</h5>
                                     <p class="card-text">With supporting text below as a natural lead-in to additional
                                         content.</p>
-                                    
                                 </div>
                             </div>
                         </div>
@@ -270,11 +282,12 @@
                                     <h5 class="card-title">New Leaves Application</h5>
                                     <p class="card-text">With supporting text below as a natural lead-in to additional
                                         content.</p>
-                                  
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
+                    
                 </div>
 
                 <div class="container-fluid w-100 border border-1">
@@ -289,26 +302,13 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const toggles = [{
-                toggle: "deptToggle",
-                dropdown: "deptDropdown",
-                chevron: "deptChevron"
-            },
-            {
-                toggle: "EmpToggle",
-                dropdown: "EmpDropdown",
-                chevron: "EmpChevron"
-            },
+        const toggles = [
             {
                 toggle: "levToggle",
                 dropdown: "levDropdown",
                 chevron: "levChevron"
-            },
-            {
-                toggle: "lmToggle",
-                dropdown: "lmDropdown",
-                chevron: "lmChevron"
             }
+            
         ];
 
         toggles.forEach(item => {

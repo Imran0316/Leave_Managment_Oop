@@ -1,3 +1,51 @@
+<?php
+session_start();
+
+
+if(isset($_POST["addemp"])){
+    $empcode= $_POST["empcode"];
+    $empgender= $_POST["empgender"];
+    $empdob= $_POST["dob"];
+    $empfname= $_POST["fname"];
+    $emplname= $_POST["lname"];
+    $departments= $_POST["departments"];
+    $address= $_POST["address"];
+    $email= $_POST["email"];
+    $city= $_POST["city"];
+    $country= $_POST["country"];
+    $password=$_POST["emppass"];
+    $phone=$_POST["phone"];
+    $cpassword=$_POST["cemppass"];
+   
+    
+    $conn=mysqli_connect("localhost","root","","leavesys");
+    $sql = "INSERT INTO employees (
+    empcode, empgender, empdob, empfname, emplname,
+    department_id, address, email, city, country,
+    password, phone) VALUES (
+    '$empcode', '$empgender', '$empdob', '$empfname', '$emplname',
+    '$departments', '$address', '$email', '$city', '$country',
+    '$password', '$phone')";
+    $run=mysqli_query($conn,$sql);
+     
+        if ($run) {
+        $_SESSION['success'] = "Employee added successfully!";
+        header("Location: emp_add.php");
+        exit();
+    } else {
+        $_SESSION['error'] = "Error adding Employee!";
+        header("Location:  emp_add.php");
+        exit();
+    }
+
+}
+
+$conn=mysqli_connect("localhost","root","","leavesys");
+$sql_dep="SELECT id, deptname FROM department";
+$result=$conn->query($sql_dep);
+
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -27,7 +75,7 @@
         integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous">
     </script>
 
-    <style>
+<style>
     .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -167,12 +215,24 @@
         justify-content: center;
         flex-direction: column;
     }
-    .cards{
-      margin-bottom: 5px;
+
+    .cards {
+        margin-bottom: 5px;
     }
 
-    
+    /* .main{
+        background-color: #f4f4f4;
+    } */
+    input,
+    select {
+        border-radius: 0 !important;
+        border-bottom-color: gray !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-top: none !important;
+    }
     </style>
+
 </head>
 
 <body>
@@ -195,91 +255,109 @@
         <div class="row">
             <?php
             include("../include/sidebar.php");
-            ?>
+           ?>
 
-            <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group mr-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+            <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 d-flex align-items-start flex-column">
+                <h3 class="text-center mt-4  d-inline-block">Add Employee</h3>
+
+
+                <?php if (isset($_SESSION['success'])): ?>
+                <div class="alert alert-success border">
+                    <?= $_SESSION['success']; unset($_SESSION['success']); ?>
+                </div>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger">
+                    <?= $_SESSION['error']; unset($_SESSION['error']); ?>
+                </div>
+                <?php endif; ?>
+
+
+
+                <div class="container-fluid main w-100 border border-1 w-50 p-3 mt-3">
+                    <form action="" method="post">
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="text" name="empcode" id="" placeholder="Employee Code"
+                                    class="form-control  shadow-sm ">
+                            </div>
+                            <div class="col-3">
+                                <select class="form-select  shadow-sm" name="empgender">
+                                    <option value="">Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">other</option>
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <input type="date" name="dob" id="" placeholder="Date Of Birth"
+                                    class="form-control  shadow-sm  ">
+                            </div>
                         </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <span data-feather="calendar"></span>
-                            This week
-                        </button>
-                    </div>
+                        <div class="row mt-5">
+                            <div class="col-3">
+                                <input type="text" name="fname" id="" placeholder="First Name"
+                                    class="form-control  shadow-sm ">
+                            </div>
+                            <div class="col-3">
+                                <input type="text" name="lname" id="" placeholder="Last Name"
+                                    class="form-control  shadow-sm ">
+                            </div>
+                            <div class="col-3">
+                                <select class="form-select  shadow-sm" name="departments">
+                                    <option value="">Departments</option>
+                                    <?php
+                                        while($data=$result->fetch_assoc()){
+                                            echo "<option>" . $data["id"] . " " . $data['deptname'] ."</option>";
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <input type="text" name="address" id="" placeholder="Address"
+                                    class="form-control  shadow-sm ">
+                            </div>
+                            <div class="row mt-5">
+                                <div class="col-6">
+                                    <input type="email" name="email" id="" placeholder="Email"
+                                        class="form-control  shadow-sm ">
+                                </div>
+                                <div class="col-3">
+                                    <input type="text" name="city" id="" placeholder="City"
+                                        class="form-control  shadow-sm ">
+                                </div>
+                                <div class="col-3">
+                                    <input type="text" name="country" id="" placeholder="country"
+                                        class="form-control  shadow-sm ">
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <div class="col-6">
+                                    <input type="password" name="emppass" id="" placeholder="Password"
+                                        class="form-control  shadow-sm ">
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" name="phone" id="" placeholder="Mobile Number"
+                                        class="form-control  shadow-sm ">
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <div class="col-6">
+                                    <input type="password" name="cemppass" id="" placeholder="Confirm Password"
+                                        class="form-control  shadow-sm ">
+                                </div>
+                                <div class="col-3">
+                                    <input type="submit" value="Add" name="addemp" class="btn btn-primary">
+                                </div>
+                            </div>
+
+
+                    </form>
                 </div>
 
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-4 mb-3 mb-sm-0  cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Registered employee</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4  cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Listed Dpartments</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Listed Leave Type</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 cards mb-3 mb-sm-0">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Approved Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 cards">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">New Leaves Application</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
-                                  
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="container-fluid w-100 border border-1">
-                  <h5>Latest Leaves Applications</h5>
-                </div>
+
 
 
             </main>
