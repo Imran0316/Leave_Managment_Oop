@@ -199,7 +199,7 @@ if(isset($_POST["login"])){
                 <h1 class="text-capitalize text-center mt-3">
                     Welcome to <br> employee leave managment system
                 </h1>
-                <p class="text-center">Admin Login</p>
+                <h2 class="text-center">Admin Login</h2>
                 <div class="container w-50 py-3 mt-5 border border-1">
                     <form action="" method="post">
                      <label class="form-label">Email</label>

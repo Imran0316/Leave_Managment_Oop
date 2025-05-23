@@ -1,9 +1,12 @@
+
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
                 <div class="container-fluid admin text-center py-3 bg-secondary">
                     <div class="user-img bg-light border rounded-circle ">
                         <i class="fa-solid fa-user"></i>
                     </div>
-                    <p class="text-light">Admin</p>
+                    <p class="text-light">
+                       
+                    </p>
                 </div>
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">

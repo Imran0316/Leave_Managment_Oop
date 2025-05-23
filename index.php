@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!doctype html>
 <html lang="en">
 
@@ -182,15 +185,20 @@
                 <h1 class="text-capitalize text-center mt-3">
                     Welcome to <br> employee leave managment system
                 </h1>
-                <p class="text-center">Employee Login</p>
+                <h2 class="text-center">Employee Login</h2>
+                 <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger">
+                    <?= $_SESSION['error']; unset($_SESSION['error']); ?>
+                </div>
+                <?php endif; ?>
                 <div class="container w-50 py-3 mt-5 border border-1">
-                    <form action="" method="">
+                    <form action="emplogin.php" method="post">
                      <label class="form-label">Email</label>
                      <input type="email" name="email" id="" class="form-control"> <br>
                      <label class="form-label">Password</label>
-                     <input type="text" name="password" id="" class="form-control"> <br>
+                     <input type="password" name="password" id="" class="form-control"> <br>
 
-                     <input type="submit" value="login" class="btn btn-primary">
+                     <input type="submit" value="login" name="login" class="btn btn-primary">
                     
                     </form>
                 </div>
