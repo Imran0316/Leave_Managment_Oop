@@ -1,3 +1,25 @@
+<?php
+session_start();
+$conn = mysqli_connect("localhost", "root", "", "leavesys");
+$emp_sql = "SELECT COUNT(*) AS total FROM employees";
+$emp_act = "SELECT COUNT(*) AS act_count FROM employees WHERE status = 'active'";
+$emp_run = mysqli_query($conn, $emp_sql);
+$emp_data = mysqli_fetch_assoc($emp_run);
+
+$active_run = mysqli_query($conn, $emp_act);
+$active_data = mysqli_fetch_assoc($active_run);
+
+$dep_sql = "SELECT COUNT(*) AS total FROM department";
+$dept_run = mysqli_query($conn, $dep_sql);
+$dept_data = mysqli_fetch_assoc($dept_run);
+
+$lev_sql = "SELECT COUNT(*) AS total FROM leavestype";
+$lev_run = mysqli_query($conn, $lev_sql);
+$lev_data = mysqli_fetch_assoc($lev_run);
+
+
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -26,152 +48,150 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
         integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous">
     </script>
-
     <style>
-    .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-
-    @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-            font-size: 3.5rem;
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
-    }
 
-    body {
-        font-size: .875rem;
-    }
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
 
-    .feather {
-        width: 16px;
-        height: 16px;
-        vertical-align: text-bottom;
-    }
+        body {
+            font-size: .875rem;
+        }
 
-    /* Sidebar*/
+        .feather {
+            width: 16px;
+            height: 16px;
+            vertical-align: text-bottom;
+        }
 
-    .sidebar {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 100;
-        /* Behind the navbar */
-        padding: 48px 0 0;
-        /* Height of navbar */
-        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-    }
+        /* Sidebar*/
 
-    @media (max-width: 767.98px) {
         .sidebar {
-            top: 5rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            /* Behind the navbar */
+            padding: 48px 0 0;
+            /* Height of navbar */
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
         }
-    }
 
-    .sidebar-sticky {
-        position: relative;
-        top: 0;
-        height: calc(100vh - 48px);
-        padding-top: .5rem;
-        overflow-x: hidden;
-        overflow-y: auto;
-        /* Scrollable contents if viewport is shorter than content. */
-    }
+        @media (max-width: 767.98px) {
+            .sidebar {
+                top: 5rem;
+            }
+        }
 
-    .sidebar .nav-link {
-        font-weight: 500;
-        color: #333;
-    }
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: .5rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+            /* Scrollable contents if viewport is shorter than content. */
+        }
 
-    .sidebar .nav-link .feather {
-        margin-right: 4px;
-        color: #727272;
-    }
+        .sidebar .nav-link {
+            font-weight: 500;
+            color: #333;
+        }
 
-    .sidebar .nav-link.active {
-        color: #007bff;
-    }
+        .sidebar .nav-link .feather {
+            margin-right: 4px;
+            color: #727272;
+        }
 
-    .sidebar .nav-link:hover .feather,
-    .sidebar .nav-link.active .feather {
-        color: inherit;
-    }
+        .sidebar .nav-link.active {
+            color: #007bff;
+        }
 
-    .sidebar-heading {
-        font-size: .75rem;
-        text-transform: uppercase;
-    }
+        .sidebar .nav-link:hover .feather,
+        .sidebar .nav-link.active .feather {
+            color: inherit;
+        }
 
-    /*Navbar*/
-    .navbar-brand {
-        padding-top: .75rem;
-        padding-bottom: .75rem;
-        font-size: 1rem;
-        background-color: rgba(0, 0, 0, .25);
-        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
-    }
+        .sidebar-heading {
+            font-size: .75rem;
+            text-transform: uppercase;
+        }
 
-    .navbar .navbar-toggler {
-        top: .25rem;
-        right: 1rem;
-    }
+        /*Navbar*/
+        .navbar-brand {
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            font-size: 1rem;
+            background-color: rgba(0, 0, 0, .25);
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+        }
 
-    .navbar .form-control {
-        padding: .75rem 1rem;
-        border-width: 0;
-        border-radius: 0;
-    }
+        .navbar .navbar-toggler {
+            top: .25rem;
+            right: 1rem;
+        }
 
-    .form-control-dark {
-        color: #fff;
-        background-color: rgba(255, 255, 255, .1);
-        border-color: rgba(255, 255, 255, .1);
-    }
+        .navbar .form-control {
+            padding: .75rem 1rem;
+            border-width: 0;
+            border-radius: 0;
+        }
 
-    .form-control-dark:focus {
-        border-color: transparent;
-        box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
-    }
+        .form-control-dark {
+            color: #fff;
+            background-color: rgba(255, 255, 255, .1);
+            border-color: rgba(255, 255, 255, .1);
+        }
 
-    .form-select:focus {
-        border: none !important;
-        box-shadow: none !important;
-    }
+        .form-control-dark:focus {
+            border-color: transparent;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+        }
 
-    .chevron {
-        font-size: 0.7rem;
-        transition: transform 0.3s ease;
-    }
+        .form-select:focus {
+            border: none !important;
+            box-shadow: none !important;
+        }
 
-    .rotate {
-        transform: rotate(180deg);
-    }
+        .chevron {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
 
-    .user-img {
-        width: 50px;
-        height: 50px;
+        .rotate {
+            transform: rotate(180deg);
+        }
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+        .user-img {
+            width: 50px;
+            height: 50px;
 
-    .admin {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-    }
-    .cards{
-      margin-bottom: 5px;
-    }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    
+        .admin {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .cards {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 
@@ -215,34 +235,39 @@
 
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-sm-4 mb-3 mb-sm-0  cards">
+                        <div class="col-sm-6 mb-3 mb-sm-0  cards">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Total Registered employee</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <h5 class="card-title">Total Registered employee</h5>
+                                            <h1 class="card-text text-primary"><?php echo $emp_data['total']; ?></h1>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5>Active Employees</h5>
+                                            <span class="text-danger"> <?php echo $active_data['act_count']; ?> </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4  cards">
+                        <div class="col-sm-3  cards">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Listed Dpartments</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
+                                    <h1 class="card-text text-primary"><?php echo $dept_data['total']; ?></h1>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4 cards">
+                        <div class="col-sm-3 cards">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Listed Leave Type</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
+                                    <h1 class="card-text text-primary"><?php echo $lev_data['total']; ?></h1>
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="row">
                         <div class="col-sm-4 cards mb-3 mb-sm-0">
@@ -260,7 +285,7 @@
                                     <h5 class="card-title">Approved Leaves</h5>
                                     <p class="card-text">With supporting text below as a natural lead-in to additional
                                         content.</p>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -270,7 +295,7 @@
                                     <h5 class="card-title">New Leaves Application</h5>
                                     <p class="card-text">With supporting text below as a natural lead-in to additional
                                         content.</p>
-                                  
+
                                 </div>
                             </div>
                         </div>
@@ -278,7 +303,7 @@
                 </div>
 
                 <div class="container-fluid w-100 border border-1">
-                  <h5>Latest Leaves Applications</h5>
+                    <h5>Latest Leaves Applications</h5>
                 </div>
 
 
@@ -288,44 +313,44 @@
 
 
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const toggles = [{
-                toggle: "deptToggle",
-                dropdown: "deptDropdown",
-                chevron: "deptChevron"
-            },
-            {
-                toggle: "EmpToggle",
-                dropdown: "EmpDropdown",
-                chevron: "EmpChevron"
-            },
-            {
-                toggle: "levToggle",
-                dropdown: "levDropdown",
-                chevron: "levChevron"
-            },
-            {
-                toggle: "lmToggle",
-                dropdown: "lmDropdown",
-                chevron: "lmChevron"
-            }
-        ];
+        document.addEventListener("DOMContentLoaded", function() {
+            const toggles = [{
+                    toggle: "deptToggle",
+                    dropdown: "deptDropdown",
+                    chevron: "deptChevron"
+                },
+                {
+                    toggle: "EmpToggle",
+                    dropdown: "EmpDropdown",
+                    chevron: "EmpChevron"
+                },
+                {
+                    toggle: "levToggle",
+                    dropdown: "levDropdown",
+                    chevron: "levChevron"
+                },
+                {
+                    toggle: "lmToggle",
+                    dropdown: "lmDropdown",
+                    chevron: "lmChevron"
+                }
+            ];
 
-        toggles.forEach(item => {
-            const toggleEl = document.getElementById(item.toggle);
-            const dropdownEl = document.getElementById(item.dropdown);
-            const chevronEl = document.getElementById(item.chevron);
+            toggles.forEach(item => {
+                const toggleEl = document.getElementById(item.toggle);
+                const dropdownEl = document.getElementById(item.dropdown);
+                const chevronEl = document.getElementById(item.chevron);
 
-            toggleEl.addEventListener("click", function(e) {
-                e.preventDefault();
-                const isOpen = dropdownEl.style.display === "block";
-                dropdownEl.style.display = isOpen ? "none" : "block";
-                chevronEl.classList.toggle("rotate", !isOpen);
+                toggleEl.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    const isOpen = dropdownEl.style.display === "block";
+                    dropdownEl.style.display = isOpen ? "none" : "block";
+                    chevronEl.classList.toggle("rotate", !isOpen);
+                });
             });
-        });
 
-        feather.replace(); // Initialize feather icons if you're using them
-    });
+            feather.replace(); // Initialize feather icons if you're using them
+        });
     </script>
 
 

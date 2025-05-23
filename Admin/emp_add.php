@@ -19,6 +19,7 @@ if(isset($_POST["addemp"])){
    
     
     $conn=mysqli_connect("localhost","root","","leavesys");
+
     $sql = "INSERT INTO employees (
     empcode, empgender, empdob, empfname, emplname,
     department_id, address, email, city, country,
@@ -26,7 +27,21 @@ if(isset($_POST["addemp"])){
     '$empcode', '$empgender', '$empdob', '$empfname', '$emplname',
     '$departments', '$address', '$email', '$city', '$country',
     '$password', '$phone')";
-    $run=mysqli_query($conn,$sql);
+     
+     if(empty($empcode) || empty($empgender) || empty($empdob) || empty($empfname) || empty($emplname) || empty($departments) || empty($address) || empty($email) || empty($city) || empty($country) || empty($password) || empty($phone)){
+        $_SESSION['error'] = "empty field!";
+        header("Location: emp_add.php");
+        exit();
+     }
+
+     if($password == $cpassword ){
+         $run=mysqli_query($conn,$sql);
+     }else{
+        $_SESSION['error'] = "Paasword Does Not Match!";
+        header("Location:  emp_add.php");
+        exit();
+     }
+
      
         if ($run) {
         $_SESSION['success'] = "Employee added successfully!";
