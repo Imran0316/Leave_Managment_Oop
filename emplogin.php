@@ -12,6 +12,7 @@ if (isset($_POST["login"])) {
         $data = mysqli_fetch_assoc($run);
         $dbpass = $data["password"];
         $_SESSION["name"] = $data["empfname"] ." ". $data["emplname"];
+        $_SESSION["id"] = $data["id"];
         $_SESSION["email"] = $data["email"];
         $_SESSION["password"] = $data["password"];
         if ($dbpass == $password) {

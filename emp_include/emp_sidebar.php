@@ -10,17 +10,17 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">
+                            <a class="nav-link active" aria-current="page" href="../Employee/dashboard.php">
                                 <span data-feather="home"></span>
                                 Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
                         <li class="nav-item">
-                          <a href="#" class="nav-link">My profile</a>
+                          <a href="emp_profile.php?id=<?php  echo $_SESSION["id"]; ?>" class="nav-link">My profile</a>
                         </li>
                         <li class="nav-item">
-                          <a href="#" class="nav-link">Change Passsword</a>
+                          <a href="change_pass.php" class="nav-link">Change Passsword</a>
                         </li>
                         
                         <li class="nav-item">
@@ -31,10 +31,10 @@
                             </a>
                             <ul class="nav flex-column " id="levDropdown" style="display: none;">
                                 <li class="nav-item ">
-                                    <a href="#" class="nav-link text-secondary">- Apply Leaves</a>
+                                    <a href="apply_lev.php" class="nav-link text-secondary">- Apply Leaves</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link text-secondary">- Leaves History</a>
+                                    <a href="manage_leaves.php" class="nav-link text-secondary">- Leaves History</a>
                                 </li>
                             </ul>
                         </li>

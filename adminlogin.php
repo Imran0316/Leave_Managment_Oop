@@ -180,7 +180,7 @@ if(isset($_POST["login"])){
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">
+                            <a class="nav-link active" aria-current="page" href="./Employee/recover_pass.php">
                                 <span data-feather="home"></span>
                                 Employee Password Recovery
                             </a>

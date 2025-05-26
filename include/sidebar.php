@@ -70,7 +70,7 @@
                             </a>
                             <ul class="nav flex-column " id="lmDropdown" style="display: none;">
                                 <li class="nav-item ">
-                                    <a href="#" class="nav-link text-secondary">- Pendin Leaves</a>
+                                    <a href="pending_leaves.php" class="nav-link text-secondary">- Pendin Leaves</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="#" class="nav-link text-secondary">- Approved Leaves</a>

@@ -1,5 +1,12 @@
 <?php
 session_start();
+$sr=1;
+$conn=mysqli_connect("localhost","root","","leavesys");
+$sql="SELECT leaves.*, employees. AS";
+$run=mysqli_query($conn,$sql);
+if(mysqli_num_rows($run) > 0){
+
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -10,12 +17,17 @@ session_start();
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.72.0">
+
     <title>Dashboard Template · Bootstrap</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+        integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link rel="canonical" href="https://v5.getbootstrap.com/docs/5.0/examples/dashboard/">
-
-
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
         integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -135,13 +147,52 @@ session_start();
         border-color: transparent;
         box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
     }
+
+    .form-select:focus {
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .chevron {
+        font-size: 0.7rem;
+        transition: transform 0.3s ease;
+    }
+
+    .rotate {
+        transform: rotate(180deg);
+    }
+
+    .user-img {
+        width: 50px;
+        height: 50px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .admin {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .cards {
+        margin-bottom: 5px;
+    }
+
+    thead td {
+        color: blue;
+        font-weight: bold;
+    }
     </style>
 </head>
 
 <body>
 
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">Leave Managemnt System</a>
+        <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#"> Leave Management System</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse"
             data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -156,56 +207,105 @@ session_start();
 
     <div class="container-fluid">
         <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.php">
-                                <span data-feather="home"></span>
-                                Employee Login
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="./Employee/recover_pass.php">
-                                <span data-feather="home"></span>
-                                Employee Password Recovery
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="adminlogin.php">
-                                <span data-feather="home"></span>
-                                Admin Login
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+            <?php
+            include("../include/sidebar.php");
+            ?>
 
-            <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                <h1 class="text-capitalize text-center mt-3">
-                    Welcome to <br> employee leave managment system
-                </h1>
-                <h2 class="text-center">Employee Login</h2>
-                 <?php if (isset($_SESSION['error'])): ?>
-                <div class="alert alert-danger">
-                    <?= $_SESSION['error']; unset($_SESSION['error']); ?>
-                </div>
-                <?php endif; ?>
-                <div class="container w-50 py-3 mt-5 border border-1">
-                    <form action="emplogin.php" method="post">
-                     <label class="form-label">Email</label>
-                     <input type="email" name="email" id="" class="form-control"> <br>
-                     <label class="form-label">Password</label>
-                     <input type="password" name="password" id="" class="form-control"> <br>
 
-                     <input type="submit" value="login" name="login" class="btn btn-primary">
-                    
-                    </form>
+            <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 d-flex align-items-start flex-column">
+                <h3 class="text-center mt-4  d-inline-block">Manage Leaves</h3>
+                <?php if (isset($_SESSION['success'])): ?>
+                    <div class="alert alert-success border">
+                        <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+                    </div>
+                    <?php endif; ?>
+    
+                    <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-danger">
+                        <?= $_SESSION['error']; unset($_SESSION['error']); ?>
+                    </div>
+                    <?php endif; ?>
+
+                <div class="container-fluid py-5">
+                    <table class="table ">
+                        <thead>
+                            <tr>
+                                <td>Sr no.</td>
+                                <td>Employee Name</td>
+                                <td>Leave Type</td>
+                                <td>Posting Date</td>
+                                <td>Status</td>
+                                <td>action</td>
+                          
+                            </tr>
+                        </thead>
+                        <?php
+                        while($data=mysqli_fetch_assoc($run)){
+                    ?>
+                        <tbody>
+                            <tr>
+                             
+                              
+
+
+
+                            </tr>
+                        </tbody>
+                        <?php }?>
+                    </table>
+                    <?php }?>
                 </div>
+
+
+
+
+
 
             </main>
         </div>
     </div>
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const toggles = [{
+                toggle: "deptToggle",
+                dropdown: "deptDropdown",
+                chevron: "deptChevron"
+            },
+            {
+                toggle: "EmpToggle",
+                dropdown: "EmpDropdown",
+                chevron: "EmpChevron"
+            },
+            {
+                toggle: "levToggle",
+                dropdown: "levDropdown",
+                chevron: "levChevron"
+            },
+            {
+                toggle: "lmToggle",
+                dropdown: "lmDropdown",
+                chevron: "lmChevron"
+            }
+        ];
+
+        toggles.forEach(item => {
+            const toggleEl = document.getElementById(item.toggle);
+            const dropdownEl = document.getElementById(item.dropdown);
+            const chevronEl = document.getElementById(item.chevron);
+
+            toggleEl.addEventListener("click", function(e) {
+                e.preventDefault();
+                const isOpen = dropdownEl.style.display === "block";
+                dropdownEl.style.display = isOpen ? "none" : "block";
+                chevronEl.classList.toggle("rotate", !isOpen);
+            });
+        });
+
+        feather.replace(); // Initialize feather icons if you're using them
+    });
+    </script>
 
 
     <script src="/docs/5.0/dist/js/bootstrap.bundle.min.js"
