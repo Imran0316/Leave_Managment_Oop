@@ -2,7 +2,10 @@
 session_start();
 $sr=1;
 $conn=mysqli_connect("localhost","root","","leavesys");
-$sql="SELECT leaves.*, employees. AS";
+$sql="SELECT  leavestype.lev_type, leaves.time,leaves.lev_status FROM leaves
+JOIN leavestype ON leaves.leavetype = leavestype.id
+
+";
 $run=mysqli_query($conn,$sql);
 if(mysqli_num_rows($run) > 0){
 
@@ -213,7 +216,7 @@ if(mysqli_num_rows($run) > 0){
 
 
             <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 d-flex align-items-start flex-column">
-                <h3 class="text-center mt-4  d-inline-block">Manage Leaves</h3>
+                <h3 class="text-center mt-4  d-inline-block">Pending leaves Leaves</h3>
                 <?php if (isset($_SESSION['success'])): ?>
                     <div class="alert alert-success border">
                         <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
@@ -244,7 +247,8 @@ if(mysqli_num_rows($run) > 0){
                     ?>
                         <tbody>
                             <tr>
-                             
+                             <td><?php echo $data["empfname"] ?></td>
+                             <td><?php echo $data["leavetype"] ?></td>
                               
 
 

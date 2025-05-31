@@ -17,6 +17,9 @@ $lev_sql = "SELECT COUNT(*) AS total FROM leavestype";
 $lev_run = mysqli_query($conn, $lev_sql);
 $lev_data = mysqli_fetch_assoc($lev_run);
 
+$leaves_sql = "SELECT COUNT(*) AS total FROM leaves";
+$leaves_run = mysqli_query($conn, $leaves_sql);
+$leaves_data = mysqli_fetch_assoc($leaves_run);
 
 ?>
 
@@ -274,8 +277,7 @@ $lev_data = mysqli_fetch_assoc($lev_run);
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Total Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
+                                    <h1 class="card-text text-primary"> <?php echo $leaves_data["total"] ?> </h1>
                                 </div>
                             </div>
                         </div>
