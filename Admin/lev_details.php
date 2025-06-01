@@ -1,23 +1,27 @@
 <?php
 session_start();
-$sr=1;
-$id=$_GET["id"];
-$conn=mysqli_connect("localhost","root","","leavesys");
-$sql="SELECT leaves.*, 
+$sr = 1;
+$id = $_GET["id"];
+$conn = mysqli_connect("localhost", "root", "", "leavesys");
+$sql = "SELECT leaves.*, 
 employees.empfname AS fname,
 employees.emplname AS lname,
 employees.empcode AS code,
 employees.email AS email,
 employees.phone  AS empTel,
 employees.empgender AS gender,
-leavestype.lev_type AS type_name
+leavestype.lev_type AS type_name,
+admin_action.remark AS admin_remarks,
+admin_action.time AS action_time
 FROM leaves
 JOIN employees ON leaves.employ_id=employees.id
 JOIN leavestype ON leaves.leavetype_id=leavestype.id
+JOIN admin_action ON leaves.admin_id=admin_action.id
 WHERE leaves.employ_id =$id
 ";
-$run=mysqli_query($conn,$sql);
-$data=mysqli_fetch_assoc($run);
+$run = mysqli_query($conn, $sql);
+$data = mysqli_fetch_assoc($run);
+$current_status = $data["lev_status"];
 ?>
 <!doctype html>
 <html lang="en">
@@ -47,8 +51,16 @@ $data=mysqli_fetch_assoc($run);
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
         integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous">
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <style>
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons (Optional) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+
+<style>
     .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -197,7 +209,7 @@ $data=mysqli_fetch_assoc($run);
         color: blue;
         font-weight: bold;
     }
-    </style>
+</style>
 </head>
 
 <body>
@@ -227,57 +239,102 @@ $data=mysqli_fetch_assoc($run);
                 <h3 class="text-center mt-4  d-inline-block">Leaves Details</h3>
                 <?php if (isset($_SESSION['success'])): ?>
                     <div class="alert alert-success border">
-                        <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+                        <?php echo $_SESSION['success'];
+                        unset($_SESSION['success']); ?>
                     </div>
-                    <?php endif; ?>
-    
-                    <?php if (isset($_SESSION['error'])): ?>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['error'])): ?>
                     <div class="alert alert-danger">
-                        <?= $_SESSION['error']; unset($_SESSION['error']); ?>
+                        <?= $_SESSION['error'];
+                        unset($_SESSION['error']); ?>
                     </div>
-                    <?php endif; ?>
+                <?php endif; ?>
 
                 <div class="container-fluid py-5">
-                   <table class="table">
-                      <tr>
-                        <th>Employee Name: </th>
-                        <td> <?php echo $data["fname"] . " " . $data["lname"]?> </td>
-                        <th>Employee Id: </th>
-                        <td> <?php echo $data["code"] ?> </td>
-                        <th>Gender: </th>
-                        <td> <?php echo $data["gender"] ?> </td>
-                      </tr>
-                      <tr>
-                        <th>Employee Email:</th>
-                        <td><?php echo $data["email"] ?></td>
-                        <th>Employee Contact No:</th>
-                        <td><?php echo $data["empTel"] ?></td>
-                      </tr>
-                      <tr>
-                        <th>Leave Type:</th>
-                        <td><?php echo $data["type_name"] ?></td>
-                        <th>Leave Dates:</th>
-                        <td><?php echo $data["fromdate"] . "<b> To </b> " . $data["todate"] ?></td>
-                        <th>Posting Date</th>
-                        <td><?php echo $data["time"] ?></td>
-                      </tr>
-                      <tr >
-                        <th>Employee Leave Description:</th>
-                        <td><?php echo $data["description"] ?></td>
-                      </tr>
-                      <tr >
-                        <th>Leave Status:</th>
-                        <td class="text-primary"><?php echo $data["lev_status"] ?></td>
-                      </tr>
-                      <tr >
-                        <th>Admin Remark:</th>
-                        <td class=""></td>
-                      </tr>
-                      <tr >
-                        <th>Action Taken Date:</th>
-                        <td class=""></td>
-                      </tr>
-                   </table>
+                    <table class="table">
+                        <tr>
+                            <th>Employee Name: </th>
+                            <td> <?php echo $data["fname"] . " " . $data["lname"] ?> </td>
+                            <th>Employee Id: </th>
+                            <td> <?php echo $data["code"] ?> </td>
+                            <th>Gender: </th>
+                            <td> <?php echo $data["gender"] ?> </td>
+                        </tr>
+                        <tr>
+                            <th>Employee Email:</th>
+                            <td><?php echo $data["email"] ?></td>
+                            <th>Employee Contact No:</th>
+                            <td><?php echo $data["empTel"] ?></td>
+                        </tr>
+                        <tr>
+                            <th>Leave Type:</th>
+                            <td><?php echo $data["type_name"] ?></td>
+                            <th>Leave Dates:</th>
+                            <td><?php echo $data["fromdate"] . "<b> To </b> " . $data["todate"] ?></td>
+                            <th>Posting Date</th>
+                            <td><?php echo $data["time"] ?></td>
+                        </tr>
+                        <tr>
+                            <th>Employee Leave Description:</th>
+                            <td><?php echo $data["description"] ?></td>
+                        </tr>
+                        <tr>
+                            <th>Leave Status:</th>
+                            <td class="text-primary"><?php echo $data["lev_status"] ?></td>
+                        </tr>
+                        <tr>
+                            <th>Admin Remark:</th>
+                            <td><?php echo $data["admin_remarks"] ?></td>
+                        </tr>
+                        <tr>
+                            <th>Action Taken Date:</th>
+                            <td class=""><?php echo $data["action_time"] ?></td>
+                        </tr>
+                    </table>
+                    <button class="btn btn-success">Take Action</button>
+
+                    <!-- Button to Open Modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centeredModal">
+                        Open Centered Modal
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="centeredModal" tabindex="-1" aria-labelledby="centeredModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="centeredModalLabel">Take Action</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+
+                                <!-- Modal Body -->
+                                <div class="modal-body">
+                                    <form action="admin_action.php" method="post">
+                                        <label for="status">Update Status</label>
+                                        <select name="status" id="status" class="form-select">
+                                            <option value="pending" <?php echo ($current_status == 'pending') ? 'selected' : '' ?>>pending</option>
+                                            <option value="approved" <?php echo ($current_status == 'approved') ? 'selected' : '' ?>>approved</option>
+                                            <option value="rejected" <?php echo ($current_status == 'rejected') ? 'selected' : '' ?>>rejected</option>
+                                        </select>
+                                        <label>Remarks</label> <br>
+                                        <textarea class="form-control" name="remark"></textarea>
+
+                                        <button type="submit" name="admin_action" class="btn btn-secondary" data-bs-dismiss="modal">submit</button>
+
+                                    </form>
+                                </div>
+
+                                <!-- Modal Footer -->
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
                 </div>
 
 
@@ -289,46 +346,55 @@ $data=mysqli_fetch_assoc($run);
         </div>
     </div>
 
+    <!-- Bootstrap Bundle with Popper (Bootstrap 5.3.3) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const toggles = [{
-                toggle: "deptToggle",
-                dropdown: "deptDropdown",
-                chevron: "deptChevron"
-            },
-            {
-                toggle: "EmpToggle",
-                dropdown: "EmpDropdown",
-                chevron: "EmpChevron"
-            },
-            {
-                toggle: "levToggle",
-                dropdown: "levDropdown",
-                chevron: "levChevron"
-            },
-            {
-                toggle: "lmToggle",
-                dropdown: "lmDropdown",
-                chevron: "lmChevron"
-            }
-        ];
+        document.addEventListener("DOMContentLoaded", function() {
+            const toggles = [{
+                    toggle: "deptToggle",
+                    dropdown: "deptDropdown",
+                    chevron: "deptChevron"
+                },
+                {
+                    toggle: "EmpToggle",
+                    dropdown: "EmpDropdown",
+                    chevron: "EmpChevron"
+                },
+                {
+                    toggle: "levToggle",
+                    dropdown: "levDropdown",
+                    chevron: "levChevron"
+                },
+                {
+                    toggle: "lmToggle",
+                    dropdown: "lmDropdown",
+                    chevron: "lmChevron"
+                }
+            ];
 
-        toggles.forEach(item => {
-            const toggleEl = document.getElementById(item.toggle);
-            const dropdownEl = document.getElementById(item.dropdown);
-            const chevronEl = document.getElementById(item.chevron);
+            toggles.forEach(item => {
+                const toggleEl = document.getElementById(item.toggle);
+                const dropdownEl = document.getElementById(item.dropdown);
+                const chevronEl = document.getElementById(item.chevron);
 
-            toggleEl.addEventListener("click", function(e) {
-                e.preventDefault();
-                const isOpen = dropdownEl.style.display === "block";
-                dropdownEl.style.display = isOpen ? "none" : "block";
-                chevronEl.classList.toggle("rotate", !isOpen);
+                toggleEl.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    const isOpen = dropdownEl.style.display === "block";
+                    dropdownEl.style.display = isOpen ? "none" : "block";
+                    chevronEl.classList.toggle("rotate", !isOpen);
+                });
             });
+
+            feather.replace(); // Initialize feather icons if you're using them
         });
 
-        feather.replace(); // Initialize feather icons if you're using them
-    });
+        const myModal = document.getElementById('myModal')
+        const myInput = document.getElementById('myInput')
+
+        myModal.addEventListener('shown.bs.modal', () => {
+            myInput.focus()
+        })
     </script>
 
 

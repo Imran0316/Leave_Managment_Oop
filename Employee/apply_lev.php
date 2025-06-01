@@ -2,17 +2,22 @@
 session_start();
 
 $conn = mysqli_connect("Localhost", "root", "", "leavesys");
-$sql = "SELECT * FROM leavestype";
+$sql = "SELECT * FROM leavestype ";
 $run = mysqli_query($conn, $sql);
+
+$admin_sql="SELECT * FROM admin_action";
+$admin_run=mysqli_query($conn,$admin_sql);
+$admin_data=mysqli_fetch_assoc($admin_run);
 
 if(isset($_POST["lev_submit"])){
     $leavetype=$_POST["leavetype"];
     $employ_id=$_POST["empid"];
+    $admin_id=$_POST["adminid"];
     $from=$_POST["fromdate"];
     $to=$_POST["todate"];
     $description=$_POST["description"];
 
-    $lev_sql="INSERT INTO `leaves`(`leavetype_id`,`employ_id`, `fromdate`, `todate`, `description`) VALUES ('$leavetype','$employ_id','$from','$to','$description')";
+    $lev_sql="INSERT INTO `leaves`(`leavetype_id`,`employ_id`,`admin_id`,`fromdate`, `todate`, `description`) VALUES ('$leavetype','$employ_id','$admin_id','$from','$to','$description')";
     $run=mysqli_query($conn,$lev_sql);
     if($run){
         $_SESSION["success"]="Submit successfully!";
@@ -283,6 +288,8 @@ if(isset($_POST["lev_submit"])){
                         </select>
                         <input type="hidden"  name="empid" value="<?php echo $_SESSION["id"]?>"
                                     class="form-control" id="">
+                           <input type="hidden"  name="adminid" value="<?php echo $admin_data["id"]?>"
+                                    class="form-control" id="">            
                         <div class="row">
                             <div class="col-6">
                                 <lable>From</lable>
