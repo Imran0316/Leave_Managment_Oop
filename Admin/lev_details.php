@@ -1,21 +1,23 @@
 <?php
 session_start();
 $sr=1;
+$id=$_GET["id"];
 $conn=mysqli_connect("localhost","root","","leavesys");
-$sql="SELECT leaves.*, leavestype.lev_type AS type_name, 
+$sql="SELECT leaves.*, 
 employees.empfname AS fname,
 employees.emplname AS lname,
 employees.empcode AS code,
-employees.id AS id
+employees.email AS email,
+employees.phone  AS empTel,
+employees.empgender AS gender,
+leavestype.lev_type AS type_name
 FROM leaves
-JOIN leavestype ON leaves.leavetype_id = leavestype.id
-JOIN employees ON leaves.employ_id = employees.id
-
+JOIN employees ON leaves.employ_id=employees.id
+JOIN leavestype ON leaves.leavetype_id=leavestype.id
+WHERE leaves.employ_id =$id
 ";
 $run=mysqli_query($conn,$sql);
-if(mysqli_num_rows($run) > 0){
-
-
+$data=mysqli_fetch_assoc($run);
 ?>
 <!doctype html>
 <html lang="en">
@@ -222,7 +224,7 @@ if(mysqli_num_rows($run) > 0){
 
 
             <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 d-flex align-items-start flex-column">
-                <h3 class="text-center mt-4  d-inline-block">Pending leaves Leaves</h3>
+                <h3 class="text-center mt-4  d-inline-block">Leaves Details</h3>
                 <?php if (isset($_SESSION['success'])): ?>
                     <div class="alert alert-success border">
                         <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
@@ -236,38 +238,46 @@ if(mysqli_num_rows($run) > 0){
                     <?php endif; ?>
 
                 <div class="container-fluid py-5">
-                    <table class="table ">
-                        <thead>
-                            <tr>
-                                <td>Sr no.</td>
-                                <td>Employee Name</td>
-                                <td>Leave Type</td>
-                                <td>Posting Date</td>
-                                <td>Status</td>
-                                <td>action</td>
-                          
-                            </tr>
-                        </thead>
-                        <?php
-                        while($data=mysqli_fetch_assoc($run)){
-                    ?>
-                        <tbody>
-                            <tr>
-                             <td> <?php echo $sr++ ?></td>
-                             <td> <?php echo $data["fname"]. " " . $data["lname"] . "(". $data["code"] .")" ?></td>
-                             <td> <?php echo $data["type_name"]  ?></td>
-                             <td> <?php echo $data["time"]  ?></td>
-                             <td> <?php echo $data["lev_status"]  ?></td>
-                             <td> <a href="lev_details.php?id=<?php echo $data["id"]; ?>" class="btn btn-primary p-1 ">Details</a></td>
-                              
-
-
-
-                            </tr>
-                        </tbody>
-                        <?php }?>
-                    </table>
-                    <?php }?>
+                   <table class="table">
+                      <tr>
+                        <th>Employee Name: </th>
+                        <td> <?php echo $data["fname"] . " " . $data["lname"]?> </td>
+                        <th>Employee Id: </th>
+                        <td> <?php echo $data["code"] ?> </td>
+                        <th>Gender: </th>
+                        <td> <?php echo $data["gender"] ?> </td>
+                      </tr>
+                      <tr>
+                        <th>Employee Email:</th>
+                        <td><?php echo $data["email"] ?></td>
+                        <th>Employee Contact No:</th>
+                        <td><?php echo $data["empTel"] ?></td>
+                      </tr>
+                      <tr>
+                        <th>Leave Type:</th>
+                        <td><?php echo $data["type_name"] ?></td>
+                        <th>Leave Dates:</th>
+                        <td><?php echo $data["fromdate"] . "<b> To </b> " . $data["todate"] ?></td>
+                        <th>Posting Date</th>
+                        <td><?php echo $data["time"] ?></td>
+                      </tr>
+                      <tr >
+                        <th>Employee Leave Description:</th>
+                        <td><?php echo $data["description"] ?></td>
+                      </tr>
+                      <tr >
+                        <th>Leave Status:</th>
+                        <td class="text-primary"><?php echo $data["lev_status"] ?></td>
+                      </tr>
+                      <tr >
+                        <th>Admin Remark:</th>
+                        <td class=""></td>
+                      </tr>
+                      <tr >
+                        <th>Action Taken Date:</th>
+                        <td class=""></td>
+                      </tr>
+                   </table>
                 </div>
 
 

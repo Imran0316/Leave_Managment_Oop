@@ -12,7 +12,7 @@ if(isset($_POST["lev_submit"])){
     $to=$_POST["todate"];
     $description=$_POST["description"];
 
-    $lev_sql="INSERT INTO `leaves`(`leavetype`,`employ_id`, `fromdate`, `todate`, `description`) VALUES ('$leavetype','$employ_id','$from','$to','$description')";
+    $lev_sql="INSERT INTO `leaves`(`leavetype_id`,`employ_id`, `fromdate`, `todate`, `description`) VALUES ('$leavetype','$employ_id','$from','$to','$description')";
     $run=mysqli_query($conn,$lev_sql);
     if($run){
         $_SESSION["success"]="Submit successfully!";
