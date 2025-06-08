@@ -5,26 +5,54 @@ $conn = mysqli_connect("Localhost", "root", "", "leavesys");
 $sql = "SELECT * FROM leavestype ";
 $run = mysqli_query($conn, $sql);
 
-$admin_sql="SELECT * FROM admin_action";
-$admin_run=mysqli_query($conn,$admin_sql);
-$admin_data=mysqli_fetch_assoc($admin_run);
 
-if(isset($_POST["lev_submit"])){
-    $leavetype=$_POST["leavetype"];
-    $employ_id=$_POST["empid"];
-    $admin_id=$_POST["adminid"];
-    $from=$_POST["fromdate"];
-    $to=$_POST["todate"];
-    $description=$_POST["description"];
+$status_sql = "SELECT * FROM lev_status";
+$status_run = mysqli_query($conn, $status_sql);
+$status_data = mysqli_fetch_assoc($status_run);
 
-    $lev_sql="INSERT INTO `leaves`(`leavetype_id`,`employ_id`,`admin_id`,`fromdate`, `todate`, `description`) VALUES ('$leavetype','$employ_id','$admin_id','$from','$to','$description')";
-    $run=mysqli_query($conn,$lev_sql);
-    if($run){
-        $_SESSION["success"]="Submit successfully!";
-        header("Location: apply_lev.php");
-        exit();
-    }else{
-        $_SESSION["error"]="Error!";
+
+$emp_id=$_SESSION["id"];
+$dept_sql = "SELECT * FROM employees WHERE id = $emp_id";
+$dept_run = mysqli_query($conn, $dept_sql);
+$dept_data = mysqli_fetch_assoc($dept_run);
+
+
+
+if (isset($_POST["lev_submit"])) {
+    $leavetype = $_POST["leavetype"];
+    $employ_id = $_POST["empid"];
+    $status_id = $_POST["statusid"];
+    $depart_id = $_POST["deptid"];
+    $from = $_POST["fromdate"];
+    $to = $_POST["todate"];
+    $description = $_POST["description"];
+
+    $lev_sql = "INSERT INTO `leaves`(`leavetype_id`,`employ_id`,`department_name`,`lev_status_id`,`fromdate`, `todate`, `description`) VALUES ('$leavetype','$employ_id','$depart_id','$status_id','$from','$to','$description')";
+    $run = mysqli_query($conn, $lev_sql);
+
+
+    if ($run) {
+
+        $leaves_id = mysqli_insert_id($conn);
+        $status_default = 1;
+        $remarks_default = "Waiting for approval";
+
+
+        $action_sql = "INSERT INTO `admin_action`(`leaves_id`, `status_id`, `remarks`) VALUES ('$leaves_id','$status_default','$remarks_default')";
+
+        $action_run = mysqli_query($conn, $action_sql);
+        if ($action_run) {
+
+            $_SESSION["success"] = "Submit successfully!";
+            header("Location: apply_lev.php");
+            exit();
+        } else {
+            $_SESSION["error"] = "Error inserting in admin_action table!";
+            header("Location: apply_lev.php");
+            exit();
+        }
+    } else {
+        $_SESSION["error"] = "Error!";
         header("Location: apply_lev.php");
         exit();
     }
@@ -63,173 +91,173 @@ if(isset($_POST["lev_submit"])){
     </script>
 
     <style>
-    .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-
-    @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-            font-size: 3.5rem;
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
-    }
 
-    body {
-        font-size: .875rem;
-    }
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
 
-    .feather {
-        width: 16px;
-        height: 16px;
-        vertical-align: text-bottom;
-    }
+        body {
+            font-size: .875rem;
+        }
 
-    /* Sidebar*/
+        .feather {
+            width: 16px;
+            height: 16px;
+            vertical-align: text-bottom;
+        }
 
-    .sidebar {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 100;
-        /* Behind the navbar */
-        padding: 48px 0 0;
-        /* Height of navbar */
-        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-    }
+        /* Sidebar*/
 
-    @media (max-width: 767.98px) {
         .sidebar {
-            top: 5rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            /* Behind the navbar */
+            padding: 48px 0 0;
+            /* Height of navbar */
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
         }
-    }
 
-    .sidebar-sticky {
-        position: relative;
-        top: 0;
-        height: calc(100vh - 48px);
-        padding-top: .5rem;
-        overflow-x: hidden;
-        overflow-y: auto;
-        /* Scrollable contents if viewport is shorter than content. */
-    }
+        @media (max-width: 767.98px) {
+            .sidebar {
+                top: 5rem;
+            }
+        }
 
-    .sidebar .nav-link {
-        font-weight: 500;
-        color: #333;
-    }
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: .5rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+            /* Scrollable contents if viewport is shorter than content. */
+        }
 
-    .sidebar .nav-link .feather {
-        margin-right: 4px;
-        color: #727272;
-    }
+        .sidebar .nav-link {
+            font-weight: 500;
+            color: #333;
+        }
 
-    .sidebar .nav-link.active {
-        color: #007bff;
-    }
+        .sidebar .nav-link .feather {
+            margin-right: 4px;
+            color: #727272;
+        }
 
-    .sidebar .nav-link:hover .feather,
-    .sidebar .nav-link.active .feather {
-        color: inherit;
-    }
+        .sidebar .nav-link.active {
+            color: #007bff;
+        }
 
-    .sidebar-heading {
-        font-size: .75rem;
-        text-transform: uppercase;
-    }
+        .sidebar .nav-link:hover .feather,
+        .sidebar .nav-link.active .feather {
+            color: inherit;
+        }
 
-    /*Navbar*/
-    .navbar-brand {
-        padding-top: .75rem;
-        padding-bottom: .75rem;
-        font-size: 1rem;
-        background-color: rgba(0, 0, 0, .25);
-        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
-    }
+        .sidebar-heading {
+            font-size: .75rem;
+            text-transform: uppercase;
+        }
 
-    .navbar .navbar-toggler {
-        top: .25rem;
-        right: 1rem;
-    }
+        /*Navbar*/
+        .navbar-brand {
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            font-size: 1rem;
+            background-color: rgba(0, 0, 0, .25);
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+        }
 
-    .navbar .form-control {
-        padding: .75rem 1rem;
-        border-width: 0;
-        border-radius: 0;
-    }
+        .navbar .navbar-toggler {
+            top: .25rem;
+            right: 1rem;
+        }
 
-    .form-control-dark {
-        color: #fff;
-        background-color: rgba(255, 255, 255, .1);
-        border-color: rgba(255, 255, 255, .1);
-    }
+        .navbar .form-control {
+            padding: .75rem 1rem;
+            border-width: 0;
+            border-radius: 0;
+        }
 
-    .form-control-dark:focus {
-        border-color: transparent;
-        box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
-    }
+        .form-control-dark {
+            color: #fff;
+            background-color: rgba(255, 255, 255, .1);
+            border-color: rgba(255, 255, 255, .1);
+        }
 
-    .form-select:focus {
-        border: none !important;
-        box-shadow: none !important;
-    }
+        .form-control-dark:focus {
+            border-color: transparent;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+        }
 
-    .chevron {
-        font-size: 0.7rem;
-        transition: transform 0.3s ease;
-    }
+        .form-select:focus {
+            border: none !important;
+            box-shadow: none !important;
+        }
 
-    .rotate {
-        transform: rotate(180deg);
-    }
+        .chevron {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
 
-    .user-img {
-        width: 50px;
-        height: 50px;
+        .rotate {
+            transform: rotate(180deg);
+        }
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+        .user-img {
+            width: 50px;
+            height: 50px;
 
-    .admin {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-    }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .cards {
-        margin-bottom: 5px;
-    }
+        .admin {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
 
-    /* .main{
+        .cards {
+            margin-bottom: 5px;
+        }
+
+        /* .main{
         background-color: #f4f4f4;
     } */
-    input,
-    select {
-        border-radius: 0 !important;
-        border-bottom-color: gray !important;
-        border-left: none !important;
-        border-right: none !important;
-        border-top: none !important;
-    }
+        input,
+        select {
+            border-radius: 0 !important;
+            border-bottom-color: gray !important;
+            border-left: none !important;
+            border-right: none !important;
+            border-top: none !important;
+        }
 
-    .main {
-        display: flex !important;
-        align-items: start !important;
-        justify-content: start !important;
-        flex-direction: column;
-    }
+        .main {
+            display: flex !important;
+            align-items: start !important;
+            justify-content: start !important;
+            flex-direction: column;
+        }
 
-    input:focus {
-        box-shadow: none !important;
-        border-bottom-color: blue !important;
-    }
+        input:focus {
+            box-shadow: none !important;
+            border-bottom-color: blue !important;
+        }
     </style>
 
 </head>
@@ -261,17 +289,17 @@ if(isset($_POST["lev_submit"])){
 
 
                 <?php if (isset($_SESSION['success'])): ?>
-                <div class="alert alert-success border">
-                    <?= $_SESSION['success'];
+                    <div class="alert alert-success border">
+                        <?= $_SESSION['success'];
                         unset($_SESSION['success']); ?>
-                </div>
+                    </div>
                 <?php endif; ?>
 
                 <?php if (isset($_SESSION['error'])): ?>
-                <div class="alert alert-danger">
-                    <?= $_SESSION['error'];
+                    <div class="alert alert-danger">
+                        <?= $_SESSION['error'];
                         unset($_SESSION['error']); ?>
-                </div>
+                    </div>
                 <?php endif; ?>
 
 
@@ -282,14 +310,17 @@ if(isset($_POST["lev_submit"])){
                             <option value="leave type">Leave Type</option>
                             <?php
                             while ($data = mysqli_fetch_assoc($run)) {
-                                echo "<option>" . $data["id"]. $data["lev_type"] . "</option>";
+                                echo "<option>" . $data["id"] . $data["lev_type"] . "</option>";
                             }
                             ?>
                         </select>
-                        <input type="hidden"  name="empid" value="<?php echo $_SESSION["id"]?>"
-                                    class="form-control" id="">
-                           <input type="hidden"  name="adminid" value="<?php echo $admin_data["id"]?>"
-                                    class="form-control" id="">            
+                        <input type="hidden" name="empid" value="<?php echo $_SESSION["id"] ?>" class="form-control"
+                            id="">
+                        <input type="hidden" name="statusid" value="<?php echo $status_data["id"] ?>" class="form-control"
+                            id="">
+                        <input type="hidden" name="deptid" value="<?php echo $dept_data["department_id"]; ?>" class="form-control"
+                            id="">
+
                         <div class="row">
                             <div class="col-6">
                                 <lable>From</lable>
@@ -320,30 +351,28 @@ if(isset($_POST["lev_submit"])){
 
 
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const toggles = [
-            {
+        document.addEventListener("DOMContentLoaded", function() {
+            const toggles = [{
                 toggle: "levToggle",
                 dropdown: "levDropdown",
                 chevron: "levChevron"
-            }
-        ];
+            }];
 
-        toggles.forEach(item => {
-            const toggleEl = document.getElementById(item.toggle);
-            const dropdownEl = document.getElementById(item.dropdown);
-            const chevronEl = document.getElementById(item.chevron);
+            toggles.forEach(item => {
+                const toggleEl = document.getElementById(item.toggle);
+                const dropdownEl = document.getElementById(item.dropdown);
+                const chevronEl = document.getElementById(item.chevron);
 
-            toggleEl.addEventListener("click", function(e) {
-                e.preventDefault();
-                const isOpen = dropdownEl.style.display === "block";
-                dropdownEl.style.display = isOpen ? "none" : "block";
-                chevronEl.classList.toggle("rotate", !isOpen);
+                toggleEl.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    const isOpen = dropdownEl.style.display === "block";
+                    dropdownEl.style.display = isOpen ? "none" : "block";
+                    chevronEl.classList.toggle("rotate", !isOpen);
+                });
             });
-        });
 
-        feather.replace(); // Initialize feather icons if you're using them
-    });
+            feather.replace(); // Initialize feather icons if you're using them
+        });
     </script>
 
 

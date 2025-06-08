@@ -11,17 +11,28 @@ employees.email AS email,
 employees.phone  AS empTel,
 employees.empgender AS gender,
 leavestype.lev_type AS type_name,
-admin_action.remark AS admin_remarks,
-admin_action.time AS action_time
+department.deptname AS depart_name
 FROM leaves
 JOIN employees ON leaves.employ_id=employees.id
 JOIN leavestype ON leaves.leavetype_id=leavestype.id
-JOIN admin_action ON leaves.admin_id=admin_action.id
+JOIN department ON leaves.department_name=department.id
 WHERE leaves.employ_id =$id
 ";
 $run = mysqli_query($conn, $sql);
 $data = mysqli_fetch_assoc($run);
-$current_status = $data["lev_status"];
+$current_status = $data["lev_status_id"];
+$lev_id=$data["id"];
+$admin_sql="SELECT admin_action.*,
+leaves.id AS id,
+lev_status.name AS sta_name
+FROM admin_action
+JOIN leaves ON admin_action.leaves_id=leaves.id
+JOIN lev_status ON admin_action.status_id=lev_status.id
+WHERE leaves_id = $lev_id
+";
+$admin_run = mysqli_query($conn, $admin_sql);
+$admin_data= mysqli_fetch_assoc($admin_run);
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -266,6 +277,8 @@ $current_status = $data["lev_status"];
                             <td><?php echo $data["email"] ?></td>
                             <th>Employee Contact No:</th>
                             <td><?php echo $data["empTel"] ?></td>
+                            <th>Employee Department:</th>
+                            <td><?php echo $data["depart_name"] ?></td>
                         </tr>
                         <tr>
                             <th>Leave Type:</th>
@@ -281,21 +294,21 @@ $current_status = $data["lev_status"];
                         </tr>
                         <tr>
                             <th>Leave Status:</th>
-                            <td class="text-primary"><?php echo $data["lev_status"] ?></td>
+                            <td class="text-primary"><?php echo $admin_data["sta_name"] ?></td>
                         </tr>
                         <tr>
                             <th>Admin Remark:</th>
-                            <td><?php echo $data["admin_remarks"] ?></td>
+                            <td><?php echo $admin_data["remarks"] ?></td>
                         </tr>
                         <tr>
                             <th>Action Taken Date:</th>
-                            <td class=""><?php echo $data["action_time"] ?></td>
+                            <td class=""></td>
                         </tr>
                     </table>
                     <button class="btn btn-success">Take Action</button>
 
                     <!-- Button to Open Modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centeredModal">
+                    <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centeredModal">
                         Open Centered Modal
                     </button>
 
@@ -315,12 +328,13 @@ $current_status = $data["lev_status"];
                                     <form action="admin_action.php" method="post">
                                         <label for="status">Update Status</label>
                                         <select name="status" id="status" class="form-select">
-                                            <option value="pending" <?php echo ($current_status == 'pending') ? 'selected' : '' ?>>pending</option>
-                                            <option value="approved" <?php echo ($current_status == 'approved') ? 'selected' : '' ?>>approved</option>
-                                            <option value="rejected" <?php echo ($current_status == 'rejected') ? 'selected' : '' ?>>rejected</option>
+                                            <option value="1" <?php echo ($current_status == '1') ? 'selected' : '' ?>>pending</option>
+                                            <option value="2" <?php echo ($current_status == '2') ? 'selected' : '' ?>>approved</option>
+                                            <option value="3" <?php echo ($current_status == '3') ? 'selected' : '' ?>>rejected</option>
                                         </select>
                                         <label>Remarks</label> <br>
                                         <textarea class="form-control" name="remark"></textarea>
+                                        <input type="hidden" name="leave_id" value="<?php echo $admin_data["leaves_id"] ?>">
 
                                         <button type="submit" name="admin_action" class="btn btn-secondary" data-bs-dismiss="modal">submit</button>
 
