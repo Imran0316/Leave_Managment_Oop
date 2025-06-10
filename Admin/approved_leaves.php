@@ -11,9 +11,8 @@ employees.id AS empid
 FROM leaves
 JOIN leavestype ON leaves.leavetype_id = leavestype.id
 JOIN employees ON leaves.employ_id = employees.id
-WHERE lev_status_id = 1;
+WHERE lev_status_id = 2;
 ";
-
 $run = mysqli_query($conn, $sql);
 if (mysqli_num_rows($run) > 0) {
 

@@ -70,13 +70,16 @@
                             </a>
                             <ul class="nav flex-column " id="lmDropdown" style="display: none;">
                                 <li class="nav-item ">
+                                    <a href="all_leaves.php" class="nav-link text-secondary">- Total Leaves</a>
+                                </li>
+                                <li class="nav-item ">
                                     <a href="pending_leaves.php" class="nav-link text-secondary">- Pendin Leaves</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link text-secondary">- Approved Leaves</a>
+                                    <a href="approved_leaves.php" class="nav-link text-secondary">- Approved Leaves</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link text-secondary">- Rejected Leaves</a>
+                                    <a href="rejected_leaves.php" class="nav-link text-secondary">- Rejected Leaves</a>
                                 </li>
                             </ul>
                         </li>

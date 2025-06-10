@@ -11,9 +11,8 @@ employees.id AS empid
 FROM leaves
 JOIN leavestype ON leaves.leavetype_id = leavestype.id
 JOIN employees ON leaves.employ_id = employees.id
-WHERE lev_status_id = 1;
-";
 
+";
 $run = mysqli_query($conn, $sql);
 if (mysqli_num_rows($run) > 0) {
 
@@ -270,7 +269,8 @@ if (mysqli_num_rows($run) > 0) {
                                         <td> <?php echo $data["fname"] . " " . $data["lname"] . "(" . $data["code"] . ")" ?></td>
                                         <td> <?php echo $data["type_name"]  ?></td>
                                         <td> <?php echo $data["time"]  ?></td>
-                                        <td> <?php echo $status_data["status_name"]  ?></td>
+                                        <td> <?php echo $status_data["status_name"] ;
+                                        ?></td>
                                         <td> <a href="lev_details.php?id=<?php echo $data["empid"]; ?>" class="btn btn-primary p-1 ">Details</a></td>
                                         <?php
                                         $_SESSION["emp_id"] = $data["empid"];

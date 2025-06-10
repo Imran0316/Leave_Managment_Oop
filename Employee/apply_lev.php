@@ -6,7 +6,7 @@ $sql = "SELECT * FROM leavestype ";
 $run = mysqli_query($conn, $sql);
 
 
-$status_sql = "SELECT * FROM lev_status";
+$status_sql = "SELECT * FROM admin_action";
 $status_run = mysqli_query($conn, $status_sql);
 $status_data = mysqli_fetch_assoc($status_run);
 
@@ -316,7 +316,7 @@ if (isset($_POST["lev_submit"])) {
                         </select>
                         <input type="hidden" name="empid" value="<?php echo $_SESSION["id"] ?>" class="form-control"
                             id="">
-                        <input type="hidden" name="statusid" value="<?php echo $status_data["id"] ?>" class="form-control"
+                        <input type="hidden" name="statusid" value="<?php echo $status_data["status_id"] ?>" class="form-control"
                             id="">
                         <input type="hidden" name="deptid" value="<?php echo $dept_data["department_id"]; ?>" class="form-control"
                             id="">

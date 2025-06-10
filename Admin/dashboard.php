@@ -21,6 +21,16 @@ $leaves_sql = "SELECT COUNT(*) AS total FROM leaves";
 $leaves_run = mysqli_query($conn, $leaves_sql);
 $leaves_data = mysqli_fetch_assoc($leaves_run);
 
+$approved_sql = "SELECT COUNT(*) AS approved FROM leaves WHERE lev_status_id = 2";
+$approved_run = mysqli_query($conn, $approved_sql);
+$approved_data = mysqli_fetch_assoc($approved_run);
+
+$newapp_sql = "SELECT COUNT(*) AS new_application FROM leaves WHERE DATE(time) = CURRENT_DATE()";
+$newapp_run = mysqli_query($conn, $newapp_sql);
+$newapp_data = mysqli_fetch_assoc($newapp_run);
+
+
+
 ?>
 
 <!doctype html>
@@ -248,7 +258,7 @@ $leaves_data = mysqli_fetch_assoc($leaves_run);
                                         </div>
                                         <div class="col-4">
                                             <h5>Active Employees</h5>
-                                            <span class="text-danger"> <?php echo $active_data['act_count']; ?> </span>
+                                            <span class="text-danger "> <?php echo $active_data['act_count']; ?> </span>
                                         </div>
                                     </div>
                                 </div>
@@ -285,28 +295,30 @@ $leaves_data = mysqli_fetch_assoc($leaves_run);
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Approved Leaves</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
+                                    <h1 class="card-text text-success">
+                                        <?php echo $approved_data["approved"] ?>
+                                    </h1>
 
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-4 cards">
+                            <a href="pending_leaves.php " class="nav-link">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">New Leaves Application</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
+                                    <h1 class="card-text text-danger">
+                                        <?php echo $newapp_data["new_application"] ?>
+                                    </h1>
 
                                 </div>
                             </div>
+                            </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="container-fluid w-100 border border-1">
-                    <h5>Latest Leaves Applications</h5>
-                </div>
+        
 
 
             </main>
