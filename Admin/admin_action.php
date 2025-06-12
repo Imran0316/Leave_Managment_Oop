@@ -23,6 +23,6 @@ if (isset($_POST["admin_action"])) {
         $_SESSION["error"] = "Action Error: " . mysqli_error($conn); // helpful for debugging
     }
 
-    header("Location: pending_leaves.php");
+   header("Location: lev_details.php");
     exit();
 }
