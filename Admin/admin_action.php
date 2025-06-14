@@ -20,9 +20,9 @@ if (isset($_POST["admin_action"])) {
     if ($run && $run2) {
         $_SESSION["success"] = "Action Recorded";
     } else {
-        $_SESSION["error"] = "Action Error: " . mysqli_error($conn); // helpful for debugging
+        $_SESSION["error"] = "Action Error: " . mysqli_error($conn); 
     }
 
-   header("Location: lev_details.php");
+   header("Location: all_leaves.php");
     exit();
 }

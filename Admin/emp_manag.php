@@ -26,7 +26,10 @@ if (mysqli_num_rows($run) > 0) {
             <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 d-flex align-items-start flex-column">
                 <div class="search-box">
                     <h3 class="text-center mt-4  d-inline-block">Manage Employees</h3>
-                    <input name="search" class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+                    <form action="" method="get">
+                    <input name="search" class="form-control form-control-dark w-100" type="search" placeholder="Search" aria-label="Search">
+                    <input type="submit" name="search" value="search" id="">
+                    </form>
                 </div>
 
                 <?php if (isset($_SESSION['success'])): ?>

@@ -67,7 +67,11 @@ if (mysqli_num_rows($run) > 0) {
                         $sr = 1;
                         while ($data = mysqli_fetch_assoc($run)) {
                             $lev_id = $data["id"];
-                            $admin_sql = "SELECT * FROM admin_action WHERE leaves_id = $lev_id  ";   
+                            $admin_sql = "SELECT admin_action.*,
+                            lev_status.name AS status_name
+                            FROM admin_action
+                            JOIN lev_status  ON admin_action.status_id = lev_status.id
+                            WHERE leaves_id = $lev_id  ";   
                             $admin_run = mysqli_query($conn, $admin_sql);
                             $admin_data = mysqli_fetch_assoc($admin_run);
                          
@@ -80,7 +84,7 @@ if (mysqli_num_rows($run) > 0) {
                                     <td><?php echo $data["todate"] ?></td>
                                     <td><?php echo $data["description"] ?></td>
                                     <td><?php echo $admin_data["remarks"] ?></td>
-                                    <td><?php echo $admin_data["status_id"] ?></td>
+                                    <td><?php echo $admin_data["status_name"] ?></td>
                                 </tr>
                             </tbody>
                         <?php } ?>

@@ -25,6 +25,10 @@ if (isset($_POST["lev_submit"])) {
     $to = $_POST["todate"];
     $description = $_POST["description"];
 
+    if(empty($leavetype ) || empty($from) || empty($to) || empty($description)){
+        $_SESSION["error"] = "empty inputs";
+    }else{
+
     $lev_sql = "INSERT INTO `leaves`(`leavetype_id`,`employ_id`,`department_name`,`lev_status_id`,`fromdate`, `todate`, `description`) VALUES ('$leavetype','$employ_id','$depart_id','$status_id','$from','$to','$description')";
     $run = mysqli_query($conn, $lev_sql);
 
@@ -54,6 +58,7 @@ if (isset($_POST["lev_submit"])) {
         header("Location: apply_lev.php");
         exit();
     }
+}
 }
 
 

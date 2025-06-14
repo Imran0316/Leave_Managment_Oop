@@ -16,22 +16,22 @@ FROM leaves
 JOIN employees ON leaves.employ_id=employees.id
 JOIN leavestype ON leaves.leavetype_id=leavestype.id
 JOIN department ON leaves.department_name=department.id
-WHERE leaves.employ_id =$id
+WHERE leaves.id=$id
 ";
 $run = mysqli_query($conn, $sql);
 $data = mysqli_fetch_assoc($run);
 $current_status = $data["lev_status_id"];
 $lev_id=$data["id"];
 $admin_sql="SELECT admin_action.*,
-leaves.id AS id,
 lev_status.name AS sta_name
 FROM admin_action
-JOIN leaves ON admin_action.leaves_id=leaves.id
 JOIN lev_status ON admin_action.status_id=lev_status.id
 WHERE leaves_id = $lev_id
 ";
 $admin_run = mysqli_query($conn, $admin_sql);
 $admin_data= mysqli_fetch_assoc($admin_run);
+
+
 
 ?>
 
@@ -140,7 +140,7 @@ include("../include/navbar.php");
                                         <textarea class="form-control" name="remark"></textarea>
                                         <input type="hidden" name="leave_id" value="<?php echo $admin_data["leaves_id"] ?>">
 
-                                        <button type="submit" name="admin_action" class="btn btn-secondary" data-bs-dismiss="modal">submit</button>
+                                        <button type="submit"  name="admin_action" class="btn btn-secondary" data-bs-dismiss="modal">submit</button>
 
                                     </form>
                                 </div>
