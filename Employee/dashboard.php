@@ -1,9 +1,9 @@
 <?php
 session_start();
 
+
+
 if (!isset($_SESSION["id"])) {
-    session_unset();
-    session_destroy();
     header("Location: ../index.php");
     exit();
 }
@@ -29,6 +29,14 @@ $new_data = mysqli_fetch_assoc($new_run);
 include("../include/meta.php");
 include("../include/navbar.php");
 ?>
+  <script>
+        // Force page reload on back button
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                location.reload();
+            }
+        });
+    </script>
 <div class="container-fluid">
     <div class="row">
         <?php
